@@ -20,11 +20,22 @@ app.use(function(req, res, next) {
   next();
 });
 
+// set the view engine to ejs
+app.set('view engine', 'ejs');
+
+// make express look in the public directory for assets (css/js/img)
+app.use(express.static(__dirname + '/public'));
+
 /* return JSON unix and natural language timestamp to client */
-app.get('/:path*', function(req, res) {
+app.get('/:path*', function(req, res, next) {
     res.json(require('./timestamp-api.js').timestampApi(getDateFromUrl(req.originalUrl)))
-    res.end()
+    next();
 })
+
+// set the home page route
+app.get('/', function(req, res) {
+    res.render('index');
+});
 
 app.listen(port, function() {
     console.log('app is running on http://localhost:' + port);
